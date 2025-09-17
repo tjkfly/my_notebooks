@@ -38,6 +38,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.TJK_NOTEBOOKS }}    # 使用你在 Secrets 里添加的 token
-          publish_dir: ./docs/build/html         # 对应你的 build/html
+          publish_dir: ./docs/build/html           # 对应你的 build/html
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
