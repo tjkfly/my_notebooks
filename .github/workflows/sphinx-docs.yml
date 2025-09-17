@@ -1,6 +1,5 @@
 name: Build and Deploy Sphinx Docs
 
-# 触发条件：每次 push 到 main 分支
 on:
   push:
     branches:
@@ -11,31 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ 拉取仓库代码
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ 安装 Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      # 3️⃣ 安装依赖
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install sphinx sphinx_rtd_theme recommonmark
 
-      # 4️⃣ 构建 Sphinx 文档
       - name: Build docs
         run: |
-          cd docs              # 进入 docs 文件夹
-          make html            # 会生成 build/html
+          cd docs
+          make html
 
-      # 5️⃣ 部署到 GitHub Pages
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v5
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/build/html   # 对应你当前的 build/html
+          publish_dir: ./docs/build/html
