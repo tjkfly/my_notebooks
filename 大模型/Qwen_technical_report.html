@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qwen 技术报告 &mdash; My Notebooks 0.1 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="Qwen2.5 VL 技术报告" href="Qwen2.5_VL_technical_report.html" />
+    <link rel="prev" title="大模型相关学习文档" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            My Notebooks
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">章节目录</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">使用方法</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">大模型相关学习文档</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#id2">章节导航</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Qwen 技术报告</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">摘要</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">1 INTRODUCTION</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">2 预训练阶段</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#alignment">3 ALIGNMENT</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Qwen2.5_VL_technical_report.html">Qwen2.5 VL 技术报告</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../BEV/index.html">BEV 相关学习文档（以BEV领域为例）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../%E7%AB%AF%E5%88%B0%E7%AB%AF/index.html">端到端相关学习文档</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">My Notebooks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">大模型相关学习文档</a></li>
+      <li class="breadcrumb-item active">Qwen 技术报告</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/大模型/Qwen_technical_report.md.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="qwen">
+<h1>Qwen 技术报告<a class="headerlink" href="#qwen" title="Link to this heading"></a></h1>
+<p><img alt="image-20250917214904259" src="../_images/image-20250917214904259.png" /></p>
+<section id="id1">
+<h2>摘要<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>大型语言模型（Large Language Models, LLMs）为人工智能领域带来了革命性变革，得以实现此前被认为仅人类可完成的自然语言处理任务。在本研究中，我们正式推出大型语言模型系列的首款模型 —— <code class="docutils literal notranslate"><span class="pre">通义千问(QWEN)</span></code>。通义千问<code class="docutils literal notranslate"><span class="pre">(QWEN)</span></code>是一个覆盖多参数规模模型的综合性语言模型系列，包含两大核心类型：<strong>一是作为预训练基础模型的 “通义千问基础版（QWEN）”</strong>，<strong>二是采用人类对齐技术微调得到的对话模型 “通义千问对话版（QWEN-CHAT）”</strong>。其中，基础语言模型在多项下游任务中均展现出卓越性能；对话模型（尤其是通过人类反馈强化学习<code class="docutils literal notranslate"><span class="pre">（Reinforcement</span> <span class="pre">Learning</span> <span class="pre">from</span> <span class="pre">Human</span> <span class="pre">Feedback,</span> <span class="pre">RLHF）</span></code>训练的版本）具备极强的竞争力，不仅拥有支持智能体（Agent）应用开发的先进工具调用与规划能力，即便在 “使用代码解释器” 等复杂任务中，与参数规模更大的模型相比也表现亮眼。此外，我们还基于基础语言模型，开发了专注于代码领域的模型（CODE-QWEN 与 CODE-QWEN-CHAT），以及聚焦数学领域的模型（MATH-QWEN-CHAT）。这些专项模型的性能显著优于开源模型，仅略逊于闭源商业模型。</p>
+</section>
+<section id="introduction">
+<h2>1 INTRODUCTION<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p><strong>大型语言模型（Large Language Models, LLMs）</strong> <code class="docutils literal notranslate"><span class="pre">(Radford</span> <span class="pre">等人，2018；Devlin</span> <span class="pre">等人，2018；Raffel</span> <span class="pre">等人，2020；Brown</span> <span class="pre">等人，2020；OpenAI，2023；Chowdhery</span> <span class="pre">等人，2022；Anil</span> <span class="pre">等人，2023；Thoppilan</span> <span class="pre">等人，2022；Touvron</span> <span class="pre">等人，2023a；2023b)</span></code>为复杂推理与问题解决任务提供了强大基础，彻底革新了人工智能（Artificial Intelligence, AI）领域。这类模型能够将海量知识压缩至神经网络中，使其成为具备极高通用性的智能体（Agent）。借助对话交互界面，大型语言模型可完成此前被认为仅属于人类专属领域的任务，尤其是涉及创造力与专业知识的任务  <code class="docutils literal notranslate"><span class="pre">(OpenAI，2022；Ouyang</span> <span class="pre">等人，2022；Anil</span> <span class="pre">等人，2023；Google，2023；Anthropic，2023a；2023b)</span></code>。它们能够与人类进行自然语言对话，包括回答问题、提供信息，甚至生成故事、诗歌、音乐等创意内容。这一能力推动了各类应用的发展，覆盖范围从聊天机器人、虚拟助手，到语言翻译与文本摘要工具等多个领域。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Radford</span> <span class="pre">等人，2018：《Improving</span> <span class="pre">Language</span> <span class="pre">Understanding</span> <span class="pre">by</span> <span class="pre">Generative</span> <span class="pre">Pre-Training》，该论文提出了</span> <span class="pre">GPT（Generative</span> <span class="pre">Pre-Training）模型，通过大模型预训练</span> <span class="pre">+</span> <span class="pre">子任务微调的方式，在自然语言处理的多个任务中取得了很好的效果。</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Devlin</span> <span class="pre">等人，2018：《BERT:</span> <span class="pre">Pre-training</span> <span class="pre">of</span> <span class="pre">Deep</span> <span class="pre">Bidirectional</span> <span class="pre">Transformers》，论文介绍了</span> <span class="pre">BERT（Bidirectional</span> <span class="pre">Encoder</span> <span class="pre">Representations</span> <span class="pre">from</span> <span class="pre">Transformers）模型，通过掩码语言建模等任务进行训练，能够双向理解上下文，在多个自然语言处理任务上取得了当时最优的结果</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Raffel</span> <span class="pre">等人，2020：《Exploring</span> <span class="pre">the</span> <span class="pre">Limits</span> <span class="pre">of</span> <span class="pre">Transfer</span> <span class="pre">Learning</span> <span class="pre">with</span> <span class="pre">a</span> <span class="pre">Unified</span> <span class="pre">Text-to-Text</span> <span class="pre">Transformer》，文章提出了基于</span> <span class="pre">Encoder-Decoder</span> <span class="pre">架构的模型</span> <span class="pre">T5（Text-to-Text</span> <span class="pre">Transfer</span> <span class="pre">Transformer）和数据集</span> <span class="pre">C4（Colossal</span> <span class="pre">Clean</span> <span class="pre">Crawled</span> <span class="pre">Corpus），并通过一系列实验验证了大模型性能的影响因素。</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Brown</span> <span class="pre">等人，2020：《Language</span> <span class="pre">models</span> <span class="pre">are</span> <span class="pre">few-shot</span> <span class="pre">learners》。</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenAI，2023：《GPT-4</span> <span class="pre">Technical</span> <span class="pre">Report》，该报告介绍了</span> <span class="pre">OpenAI</span> <span class="pre">的</span> <span class="pre">GPT-4</span> <span class="pre">模型，详细阐述了模型的架构、训练方法以及在各种任务上的性能表现。</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Chowdhery</span> <span class="pre">等人，2022：《PaLM:</span> <span class="pre">Scaling</span> <span class="pre">Language</span> <span class="pre">Modeling</span> <span class="pre">with</span> <span class="pre">Pathways》，论文介绍了</span> <span class="pre">Google</span> <span class="pre">的</span> <span class="pre">PaLM（Pathways</span> <span class="pre">Language</span> <span class="pre">Model）模型，该模型参数高达</span> <span class="pre">5400</span> <span class="pre">亿，利用</span> <span class="pre">Pathways</span> <span class="pre">多机调度系统进行训练，在数百项任务上实现了</span> <span class="pre">Few-shot</span> <span class="pre">学习的最优性能。</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Anil</span> <span class="pre">等人，2023：《PaLM</span> <span class="pre">2</span> <span class="pre">technical</span> <span class="pre">report》</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Thoppilan</span> <span class="pre">等人，2022：《LaMDA:</span> <span class="pre">Language</span> <span class="pre">Models</span> <span class="pre">for</span> <span class="pre">Dialog</span> <span class="pre">Applications》，论文介绍了斯坦福和谷歌联合提出的</span> <span class="pre">LaMDA（Language</span> <span class="pre">Models</span> <span class="pre">for</span> <span class="pre">Dialog</span> <span class="pre">Applications）模型，这是一个用于对话的语言模型。</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Touvron</span> <span class="pre">等人，《LLaMA:</span> <span class="pre">Open</span> <span class="pre">and</span> <span class="pre">efficient</span> <span class="pre">foundation</span> <span class="pre">language</span> <span class="pre">models》《Llama</span> <span class="pre">2:</span> <span class="pre">Open</span> <span class="pre">Foundation</span> <span class="pre">and</span> <span class="pre">Fine-Tuned</span> <span class="pre">Chat</span> <span class="pre">Models》，论文介绍了</span> <span class="pre">Llama</span> <span class="pre">2</span> <span class="pre">模型，包括其基础模型和微调的聊天模型，展示了</span> <span class="pre">Llama</span> <span class="pre">2</span> <span class="pre">在多个任务上的性能表现。至于</span> <span class="pre">Touvron</span> <span class="pre">等人</span> <span class="pre">2023b</span> <span class="pre">的论文，根据现有信息无法准确确定其具体内容。</span></code></p></li>
+</ul>
+<p>大型语言模型（LLMs）的能力并非仅局限于语言类任务，它们还可作为<strong>通用智能体</strong><code class="docutils literal notranslate"><span class="pre">（generalist</span> <span class="pre">agent）（Reed</span> <span class="pre">等人，2022；Bai</span> <span class="pre">等人，2022a；Wang</span> <span class="pre">等人，2023a；AutoGPT，2023；Hong</span> <span class="pre">等人，2023）</span></code>，通过与外部系统、工具及模型协作，实现人类设定的目标。例如，<strong>大型语言模型能够理解多模态指令</strong><code class="docutils literal notranslate"><span class="pre">（OpenAI，2023；Bai</span> <span class="pre">等人，2023；Liu</span> <span class="pre">等人，2023a；Ye</span> <span class="pre">等人，2023；Dai</span> <span class="pre">等人，2023；Peng</span> <span class="pre">等人，2023b）</span></code>、<strong>执行代码</strong><code class="docutils literal notranslate"><span class="pre">（Chen</span> <span class="pre">等人，2021；Zheng</span> <span class="pre">等人，2023；Li</span> <span class="pre">等人，2023d）</span></code>、<strong>调用工具</strong><code class="docutils literal notranslate"><span class="pre">（Schick</span> <span class="pre">等人，2023；LangChain,</span> <span class="pre">Inc.，2023；AutoGPT，2023）</span></code>等。这为人工智能应用开辟了全新的可能性，应用场景从自动驾驶、机器人技术，延伸至医疗健康与金融领域。随着这类模型持续演进与优化，未来数年我们有望见证更多创新且极具价值的应用落地。无论是协助人类解决复杂问题、创造新型娱乐形式，还是改变我们的生活与工作方式，大型语言模型都将在塑造人工智能未来的进程中，扮演核心角色</p>
+<p><img alt="image-20250918010726286" src="../_images/image-20250918010726286.png" /></p>
+<p><code class="docutils literal notranslate"><span class="pre">图</span> <span class="pre">1：通义千问（Qwen）系列模型谱系我们在包含万亿级</span> <span class="pre">token</span> <span class="pre">的海量数据集上，对</span> <span class="pre">“通义千问基础版（QWEN）”</span> <span class="pre">语言模型进行了预训练。随后，通过有监督微调（Supervised</span> <span class="pre">Fine-Tuning,</span> <span class="pre">SFT）与人类反馈强化学习（Reinforcement</span> <span class="pre">Learning</span> <span class="pre">from</span> <span class="pre">Human</span> <span class="pre">Feedback,</span> <span class="pre">RLHF）技术，使模型对齐人类偏好，进而得到</span> <span class="pre">“通义千问对话版（QWEN-CHAT）”，以及经过专项优化的改进版本</span> <span class="pre">“QWEN-CHAT-RLHF”。此外，我们还基于通义千问基础模型，采用类似技术路线，开发了面向代码与数学领域的专项模型，例如</span> <span class="pre">“代码版通义千问（CODE-QWEN）”“代码对话版通义千问（CODE-QWEN-CHAT）”</span> <span class="pre">及</span> <span class="pre">“数学对话版通义千问（MATH-QWEN-CHAT）”。需说明的是，我们此前已发布多模态大型语言模型</span> <span class="pre">“通义千问视觉版（QWEN-VL）”</span> <span class="pre">与</span> <span class="pre">“通义千问视觉对话版（QWEN-VL-CHAT）”（Bai</span> <span class="pre">等人，2023），这两款模型同样基于通义千问基础模型构建。</span></code></p>
+<p>尽管大型语言模型（LLMs）具备令人瞩目的能力，但其在<strong>可复现性</strong>、<strong>可控性</strong>以及对服务提供商的<strong>可及性</strong>方面存在不足，这一点也常遭诟病。在本研究中，我们荣幸地推出并开源大型语言模型系列的初始版本 —— 通义千问（QWEN）。“QWEN” 一词源自中文 “千问”，字面意为 “数千个提示词（prompts）”，蕴含着接纳各类问题、响应多元需求的设计理念。通义千问（QWEN）是一个覆盖多参数规模模型的综合性语言模型系列，包含三大核心类型：一是预训练基础语言模型；二是通过人类对齐技术（即有监督微调<code class="docutils literal notranslate"><span class="pre">（Supervised</span> <span class="pre">Fine-Tuning,</span> <span class="pre">SFT）</span></code>、人类反馈强化学习<code class="docutils literal notranslate"><span class="pre">（Reinforcement</span> <span class="pre">Learning</span> <span class="pre">from</span> <span class="pre">Human</span> <span class="pre">Feedback,</span> <span class="pre">RLHF）</span></code>等）微调得到的对话模型；三是面向代码与数学领域的专项模型。具体细节如下：</p>
+<ol class="arabic simple">
+<li><p>通义千问基础版模型（QWEN）的训练数据规模庞大，涵盖文本、代码等多元内容，token 总量最高达 3 万亿。即便与参数规模显著更大的模型相比，该基础模型在多项下游任务中仍持续展现出更优性能。</p></li>
+<li><p><strong>通义千问对话版模型（QWEN-CHAT）的微调过程基于精心筛选的数据集，该数据集覆盖任务执行、对话交互、工具调用、智能体（Agent）开发、安全合规等多个维度</strong>。基准测试结果显示，经有监督微调（SFT）训练的模型已能实现卓越性能；此外，我们还训练了模拟人类偏好的<strong>奖励模型</strong>（Reward Model），并将其应用于对话模型的**人类反馈强化学习（RLHF）**流程，最终得到符合人类偏好的模型输出。通过高难度测试集的人工评估发现，经 RLHF 训练的 QWEN-CHAT 模型具备极强竞争力，但在我们的基准测试中仍略逊于 GPT-4。</p></li>
+<li><p>同时，我们推出了代码专项模型 CODE-QWEN，包含 CODE-QWEN-7B、CODE-QWEN-14B 两个基础版本，以及对应的对话版本 CODE-QWEN-7B-CHAT、CODE-QWEN-14B-CHAT。具体而言，CODE-QWEN 先在大规模代码数据集上完成预训练，随后通过进一步微调，具备处理代码生成、调试、解释等对话场景的能力。在 HumanEval（Chen 等人，2021）、MBPP（Austin 等人，2021）、HumanEvalPack（Muennighoff 等人，2023）等基准数据集上的实验结果表明，CODE-QWEN 在代码理解与生成任务中展现出高水平能力。</p></li>
+<li><p>本研究还引入了专为解决数学问题设计的模型 MATH-QWEN-CHAT。结果显示，MATH-QWEN-7B-CHAT 与 MATH-QWEN-14B-CHAT 两款模型，在同参数规模的开源模型中性能优势显著；在 GSM8K（Cobbe 等人，2021）、MATH（Hendrycks 等人，2021）等数学相关基准数据集上，其性能已接近 GPT-3.5。</p></li>
+<li><p>此外，<strong>我们已开源具备视觉 - 语言多模态理解能力的 QWEN-VL 与 QWEN-VL-CHAT 模型。在各类多模态评估基准中，这两款模型的性能均超越当前主流开源视觉 - 语言模型，支持中英文双语的文本识别与视觉定位（Visual Grounding）任务，还可实现多图像对话与图像故事生成功能。更多细节可参考 Bai 等人（2023）的相关研究</strong></p></li>
+</ol>
+<p>目前，我们正式开源参数规模为 140 亿（14B）与 70 亿（7B）的通义千问基础预训练模型（QWEN），以及经过人类偏好对齐的对话模型（QWEN-CHAT）²。本次开源旨在以开发者与应用场景友好的模型规模，提供更全面、更强大的大型语言模型（LLMs）支持。</p>
+<p>本报告的结构安排如下：<strong>第 2 章</strong>将阐述通义千问基础模型（QWEN）的预训练方法及实验结果；<strong>第 3 章</strong>将介绍模型对齐（Alignment）的技术方案，并汇报自动评估与人工评估的结果，同时详细说明我们在构建具备工具调用、代码解释器及智能体（Agent）能力的对话模型方面所做的工作；<strong>第 4 章</strong>与<strong>第 5 章</strong>将深入分析代码专项模型与数学专项模型的技术细节及性能表现；<strong>第 6 章</strong>将对相关研究工作（Related Work）进行综述；<strong>第 7 章</strong>将总结全文，并指出未来的研究方向。</p>
+</section>
+<section id="id2">
+<h2>2 预训练阶段<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>预训练阶段需通过学习海量数据，以获取对世界及其各类复杂事物的全面理解。该阶段的学习内容不仅包括基础语言能力，还涵盖算术、编程、逻辑推理等高级技能。本节将详细介绍预训练所用的数据、模型设计与规模扩展方案，以及在基准数据集上的综合评估结果。</p>
+<section id="data">
+<h3>2.1 DATA<a class="headerlink" href="#data" title="Link to this heading"></a></h3>
+<p>已有研究（Hoffmann 等人，2022；Touvron 等人，2023b）表明，<strong>数据规模是构建高性能大型语言模型的关键因素</strong>。而要打造有效的预训练数据集，核心在于确保数据的<strong>多样性</strong>，覆盖广泛的类型、领域与任务场景。我们的预训练数据集正是基于这一需求设计，包含公开网页文档、百科全书、书籍、代码等多种数据类型。此外，该数据集具备多语言属性，其中英文与中文数据占比显著。</p>
+<p><img alt="image-20250918010828788" src="../_images/image-20250918010828788.png" /></p>
+<p><code class="docutils literal notranslate"><span class="pre">图</span> <span class="pre">2：GPT-4、GPT-3.5、此前</span> <span class="pre">130</span> <span class="pre">亿参数（13B）最优模型（SOTA）及通义千问</span> <span class="pre">140</span> <span class="pre">亿参数模型（QWEN-14B）的性能对比本图展示了上述模型在</span> <span class="pre">12</span> <span class="pre">个数据集上的测试结果，这些数据集覆盖语言理解、知识问答、推理等多个领域。结果显示，通义千问</span> <span class="pre">140</span> <span class="pre">亿参数模型（QWEN-14B）的性能显著优于同参数规模下的此前最优模型（SOTA），但与</span> <span class="pre">GPT-3.5</span> <span class="pre">和</span> <span class="pre">GPT-4</span> <span class="pre">相比仍存在差距。</span></code></p>
+<p><strong>为保障预训练数据质量</strong>，我们制定了一套全面的数据预处理流程。针对公开网页数据，我们从 HTML 中提取文本内容，并借助语言识别工具判定文本所属语言。为提升数据多样性，我们采用了多重去重技术，包括文本标准化后的精确匹配去重，以及<strong>基于 MinHash（最小哈希）与 LSH（局部敏感哈希）算法实现的模糊去重</strong>；</p>
+<p><strong>为过滤低质量数据</strong>，我们结合了 “规则驱动” 与 “机器学习驱动” 两类方法：具体而言，我们调用多类模型对内容进行评分，涵盖语言模型、文本质量评分模型，以及用于识别潜在冒犯性或不当内容的模型；<strong>同时，我们还对各来源的文本进行人工抽样审核，以确保数据质量。</strong></p>
+<p><strong>为进一步提升数据质量</strong>，我们对部分来源的优质数据进行选择性上采样，确保模型能在 “多样且高质量” 的内容上完成训练。近期多项研究（Zeng 等人，2022；Aribandi 等人，2021；Raffel 等人，2020）表明，使用多任务指令对语言模型进行预训练，可提升模型的零样本（zero-shot）与少样本（few-shot）性能。因此，为进一步优化模型性能，我们将高质量指令数据纳入了预训练流程。</p>
+<p><strong>为保障基准评估的完整性</strong>（避免数据泄露影响结果公正性），我们借鉴了 Brown 等人（2020）的方法，对指令数据进行严格筛选：若某条指令样本与评估所用测试集中的任意数据存在 13 元语法（13-gram）重叠，便将其彻底剔除。鉴于下游任务数量庞大，无法对所有任务重复该过滤流程，但我们已确保本报告中提及任务的指令数据均经过上述处理，以保障评估结果的准确性与可靠性。</p>
+<p>最终，我们构建了一个 token 总量高达 <strong>3 万亿</strong>的预训练数据集。</p>
+<p><img alt="image-20250918010906039" src="../_images/image-20250918010906039.png" /></p>
+<p><code class="docutils literal notranslate"><span class="pre">图</span> <span class="pre">3：不同模型的编码压缩率对比，我们为每种语言随机选取了</span> <span class="pre">100</span> <span class="pre">万份文档组成语料库，用于测试并对比不同模型的编码压缩率（以支持</span> <span class="pre">100</span> <span class="pre">种语言的</span> <span class="pre">XLM-R</span> <span class="pre">模型（Conneau</span> <span class="pre">等人，2019）的压缩率为基准值</span> <span class="pre">1，该模型未在图中展示）。从结果可见，通义千问（QWEN）在保障中文、英文及代码高效编码的同时，对其他多种语言（如泰语（th）、希伯来语（he）、阿拉伯语（ar）、韩语（ko）、越南语（vi）、日语（ja）、土耳其语（tr）、印尼语（id）、波兰语（pl）、俄语（ru）、荷兰语（nl）、葡萄牙语（pt）、意大利语（it）、德语（de）、西班牙语（es）、法语（fr）等）也实现了高压缩率。这一特性使模型在这些语言场景下，既具备强大的可扩展性，又拥有较高的训练与推理效率。</span></code></p>
+</section>
+<section id="tokenization">
+<h3>2.2 TOKENIZATION  （分词）<a class="headerlink" href="#tokenization" title="Link to this heading"></a></h3>
+<p><strong>词汇表的设计对训练效率和下游任务性能有着显著影响</strong>。本研究中，我们沿用 GPT-3.5 和 GPT-4 的做法，<strong>采用字节对编码（Byte Pair Encoding, BPE）作为分词方法</strong>。我们以开源的<strong>快速 BPE 分词器</strong> <code class="docutils literal notranslate"><span class="pre">tiktoken（Jain，2022）</span></code>为基础，<strong>选用 cl100k_base 词汇表作为初始词汇集</strong>。为提升模型在多语言下游任务中的性能（尤其是中文任务），我们在词汇表中增补了常用汉字、词语及其他语言的常用词汇。此外，参考 Touvron 等人（2023a；2023b）的方法，我们<strong>将数字拆分为单个数字进行处理</strong>。最终词汇表规模约为 15.2 万（152K）。</p>
+<p>图 3 展示了通义千问（QWEN）分词器的压缩性能。在这项对比实验中，我们将其与 XLM-R（Conneau 等人，2019）、LLaMA（Touvron 等人，2023a）、百川（Baichuan，Inc.，2023a）和 InternLM（InternLM 团队，2023）等多款分词器进行了性能比较。结果显示，在大多数语言中，通义千问的分词器压缩效率均优于同类产品。这意味着，通义千问仅需更少的 token 即可承载与竞品相当的信息量，从而显著降低服务部署成本。此外，我们通过初步实验验证了扩大词汇表规模不会对预训练模型的下游性能产生负面影响。实验结果表明，尽管词汇表规模有所增加，通义千问在下游任务评估中仍能保持原有性能水平。</p>
+<p><img alt="image-20250918010926432" src="../_images/image-20250918010926432.png" /></p>
+</section>
+<section id="architecture">
+<h3>2.3 ARCHITECTURE<a class="headerlink" href="#architecture" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"> <span class="pre">QWEN</span></code> 采用了改进版的 <code class="docutils literal notranslate"><span class="pre">Transformer</span></code> 架构进行设计。具体来说，我们采用了最近训练大语言模型的开源方法 LLaMA（Touvron 等人，2023a），<strong>LLaMA 被广泛认为是顶级的开源大语言模型</strong>。我们对架构的修改包括：</p>
+<ul>
+<li><p><strong>Embedding and output projection</strong>  基于初步实验结果，我们选择了<strong>非绑定嵌入（untied embedding）方案</strong>，而非将输入嵌入（input embedding）与输出投影（output projection）的权重进行绑定。这一决策以增加内存开销为代价，换取了更优的模型性能。</p></li>
+<li><p><strong>Positional embedding</strong>  我们选择了<strong>旋转位置编码</strong>（<code class="docutils literal notranslate"><span class="pre">RoPE,</span> <span class="pre">Rotary</span> <span class="pre">Positional</span> <span class="pre">Embedding</span></code>）（Su 等人，2021）作为模型中融入位置信息的首选方案。<code class="docutils literal notranslate"><span class="pre">RoPE</span></code> 已被广泛采用，并在当代大型语言模型中展现出良好效果，尤其是在 PaLM（Chowdhery 等人，2022；Anil 等人，2023）和 LLaMA（Touvron 等人，2023a；2023b）中。值得注意的是，为优先保障模型性能并实现更高精度，我们对<strong>逆频率矩阵</strong>采用了 FP32 精度，而非 BF16 或 FP16 精度。</p></li>
+<li><p><strong>Bias</strong></p>
+<p>对于大多数层，我们参考 <code class="docutils literal notranslate"><span class="pre">Chowdhery</span> <span class="pre">等人（2022）</span></code>的做法移除了偏置项（biases），但在注意力机制的 <code class="docutils literal notranslate"><span class="pre">Q</span> <span class="pre">K</span> <span class="pre">V</span></code> 层（查询 - 键 - 值层，<code class="docutils literal notranslate"><span class="pre">Query-Key-Value</span> <span class="pre">layer</span></code>）中保留了偏置项 —— <strong>这一设计旨在增强模型的外推能力</strong>（Su, 2023b）。</p>
+</li>
+<li><p><strong>Pre-Norm &amp; RMSNorm</strong></p>
+<p>在现代 Transformer 模型中，<strong>预归一化（pre-normalization）</strong> 是应用最广泛的方法 —— 与<strong>后归一化（post-normalization）<strong>相比，它已被证明能提升训练稳定性。近期有研究提出了可进一步优化训练稳定性的替代方法，我们计划在模型的未来版本中探索这些方案。此外，我们已将（Ba 等人，2016）中提出的传统层归一化</strong>（layer normalization）<strong>技术，替换为</strong>RMSNorm（Root Mean Square Normalization，均方根归一化）</strong>（Jiang 等人，2023）。这一修改在保证模型性能与原方案相当的同时，还提升了计算效率</p>
+</li>
+<li><p><strong>Activation function</strong></p>
+<p>我们选择<strong>SwiGLU（Shazeer, 2020）</strong> 作为激活函数，该函数是 Swish（Ramachandran 等人，2017）与门控线性单元<code class="docutils literal notranslate"><span class="pre">（Gated</span> <span class="pre">Linear</span> <span class="pre">Unit,</span> <span class="pre">GLU；Dauphin</span> <span class="pre">等人，2017）</span></code>的结合体。初步实验表明，基于 <strong>GLU</strong> 设计的激活函数（如 SwiGLU），整体性能优于 GeLU（Hendrycks &amp; Gimpel, 2016）等其他基准激活函数。此外，参考以往研究中的通用做法，我们将前馈网络<code class="docutils literal notranslate"><span class="pre">（Feed-Forward</span> <span class="pre">Network,</span> <span class="pre">FFN）</span></code>的维度从 “隐藏层维度的 4 倍” 调整为 “隐藏层维度的 8/3 倍”</p>
+</li>
+</ul>
+</section>
+<section id="training">
+<h3>2.4 TRAINING<a class="headerlink" href="#training" title="Link to this heading"></a></h3>
+<p>在训练 QWEN 模型时，我们采用了 Radford 等人（2018）提出的**标准自回归语言建模（autoregressive language modeling）**方法。该方法的核心是训练模型基于前文 token（词元）提供的上下文信息，预测下一个 token。具体训练细节如下：</p>
+<p>我们训练的模型上下文长度（context length）设为 2048。在构建数据批次（batches）时，我们先对文档进行打乱（shuffle）与合并（merge），再将其截断（truncate）至指定的上下文长度。为提升计算效率并降低内存占用，我们在注意力模块中采用了 <strong>Flash Attention</strong> 技术（Dao 等人，2022）。预训练优化阶段使用标准的 <strong>AdamW</strong> 优化器<code class="docutils literal notranslate"><span class="pre">（Kingma</span> <span class="pre">&amp;</span> <span class="pre">Ba，2014；Loshchilov</span> <span class="pre">&amp;</span> <span class="pre">Hutter，2017）</span></code>，并设置超参数：β₁ = 0.9、β₂ = 0.95、ϵ = 10⁻⁸。</p>
+<p>针对不同规模的模型，我们采用余弦学习率调度<code class="docutils literal notranslate"><span class="pre">（cosine</span> <span class="pre">learning</span> <span class="pre">rate</span> <span class="pre">schedule）</span></code>，并为其设定特定的峰值学习率（peak learning rate）。学习率最终会衰减至峰值学习率的 10%，作为最小学习率。<strong>为保证训练稳定性，所有模型均采用 BFloat16 混合精度（mixed precision）进行训练</strong>。</p>
+</section>
+<section id="context-length-extension">
+<h3>2.5 CONTEXT LENGTH EXTENSION<a class="headerlink" href="#context-length-extension" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Transformer</span></code> 模型的注意力机制在上下文长度方面存在一个显著局限：随着上下文长度增加，其二次复杂度<code class="docutils literal notranslate"><span class="pre">（quadratic-complexity）</span></code>的计算会导致计算成本与内存成本急剧上升。在本研究中，我们实现了一种简单的<strong>无训练（training-free）技术</strong>—— 该技术仅在推理（inference）阶段应用，即可实现模型上下文长度的扩展。其中，我们采用的核心技术之一是<strong>NTK 感知插值（NTK-aware interpolation）</strong>（bloc97, 2023）。</p>
+<p>与位置插值（PI，Chen 等人，2023a）对旋转位置编码（RoPE）的每个维度进行均等缩放不同，NTK 感知插值通过调整 RoPE 的底数（base），以无训练（training-free）的方式避免高频信息丢失。为进一步提升性能，我们还实现了一种简单扩展方案，称为<strong>动态 NTK 感知插值</strong>—— 该方案后续在 Peng 等人（2023a）的研究中被正式阐述。它会按块（chunk）动态调整缩放比例，从而避免模型性能出现严重下降。借助这些技术，我们能够有效扩展模型的上下文（长度）。</p>
+<p>QWEN 模型额外集成了两种注意力机制：<strong>LogN 缩放（LogN-Scaling，Chiang &amp; Cholak, 2022；Su, 2023a）</strong> 与<strong>窗口注意力（window attention，Beltagy 等人，2020）</strong>。其中，LogN 缩放通过一个 “与当前上下文长度和训练时上下文长度的比值相关的因子”，对查询（query）与值（value）的点积结果进行重缩放，确保随着上下文长度增加，注意力值的熵（entropy）仍能保持稳定。窗口注意力则将注意力计算限制在一个有限的上下文窗口内，避免模型关注距离过远的 token。</p>
+<p>我们还观察到，模型的长上下文建模能力在不同层之间存在差异：相较于高层，<strong>低层对上下文长度扩展更敏感</strong>。基于这一发现，我们为每一层分配了不同的窗口大小 —— 低层采用更短的窗口，高层采用更长的窗口。</p>
+</section>
+<section id="experimental-results">
+<h3>2.6 EXPERIMENTAL RESULTS<a class="headerlink" href="#experimental-results" title="Link to this heading"></a></h3>
+<p>为评估我们模型的零样本（zero-shot）与少样本（few-shot）学习能力，我们采用一系列数据集开展了全面的基准测试。我们将通义千问（QWEN）与当前最新的开源基础模型进行对比，这些模型包括<code class="docutils literal notranslate"> <span class="pre">LLaMA（Touvron</span> <span class="pre">等人，2023a）、LLAMA</span> <span class="pre">2（Touvron</span> <span class="pre">等人，2023b）、MPT（Mosaic</span> <span class="pre">ML，2023）、Falcon（Almazrouei</span> <span class="pre">等人，2023）、百川</span> <span class="pre">2（Baichuan2，Yang</span> <span class="pre">等人，2023）、ChatGLM2（ChatGLM2</span> <span class="pre">团队，2023）、InternLM（InternLM</span> <span class="pre">团队，2023）、XVERSE（Inc.，2023b）以及</span> <span class="pre">StableBeluga2（Stability</span> <span class="pre">AI，2023）。</span></code></p>
+<p>我们的评估共覆盖 7 项主流基准测试，具体如下：</p>
+<ul class="simple">
+<li><p>MMLU（5 样本）（Hendrycks 等人，2020）</p></li>
+<li><p>C-Eval（5 样本）（Huang 等人，2023）</p></li>
+<li><p>GSM8K（8 样本）（Cobbe 等人，2021）</p></li>
+<li><p>MATH（4 样本）（Hendrycks 等人，2021）</p></li>
+<li><p>HumanEval（0 样本）（Chen 等人，2021）</p></li>
+<li><p>MBPP（0 样本）（Austin 等人，2021）</p></li>
+<li><p>BBH（即 “Big Bench Hard”，3 样本）（Suzgun 等人，2022）</p></li>
+</ul>
+<p>我们的目标是通过这些基准测试，全面总结模型在各类任务场景下的整体性能表现。</p>
+<p><code class="docutils literal notranslate"><span class="pre">注：1.</span> <span class="pre">“zero-shot”“few-shot”</span> <span class="pre">为</span> <span class="pre">LLM</span> <span class="pre">能力评估核心术语，分别指</span> <span class="pre">“零样本学习（无需任务示例即可执行任务）”</span> <span class="pre">和</span> <span class="pre">“少样本学习（仅需少量任务示例即可适配任务）”，括号内补充中文释义以明确含义；2.</span> <span class="pre">各基准测试后的</span> <span class="pre">“N-shot”</span> <span class="pre">代表该测试的样本配置（如</span> <span class="pre">“5-shot”</span> <span class="pre">指为模型提供</span> <span class="pre">5</span> <span class="pre">个任务示例），是统一评估标准的关键参数；</span></code></p>
+<p>在本次评估中，我们聚焦于<strong>未经过对齐处理的基础语言模型</strong>，并从各基准模型的官方结果及<code class="docutils literal notranslate"><span class="pre">OpenCompass(OpenCompass</span> <span class="pre">2023)</span></code>中收集了它们的最佳性能分数。相关结果如表 2 所示。</p>
+<p><img alt="image-20250918010954866" src="../_images/image-20250918010954866.png" /></p>
+<p>实验结果表明，三款通义千问（QWEN）模型在所有下游任务中均展现出优异性能。值得注意的是，即便面对参数规模更大的模型（如 LLaMA2-70B），通义千问 140 亿参数模型（QWEN-14B）仍在 3 项任务中实现了性能超越；通义千问 70 亿参数模型（QWEN-7B）表现同样出色，其性能超过 LLaMA2-13B，且与百川 2-13B（Baichuan2-13B）的结果相当。尤其值得关注的是，尽管通义千问 18 亿参数模型（QWEN-1.8B）的参数规模相对较小，但它在部分任务中仍具备竞争力，甚至在某些场景下超越了参数规模更大的模型。这些发现充分彰显了通义千问系列模型（尤其是 QWEN-14B）的卓越能力，同时也表明像 QWEN-1.8B 这样的小参数模型，在特定应用场景中依然能实现出色性能。</p>
+<p>为评估上下文长度扩展的有效性，表 3 展示了在 arXiv³ 数据集上以困惑度（PPL）为指标的测试结果。结果显示，通过结合 NTK 感知插值（NTK-aware interpolation）、LogN 缩放（LogN-Scaling）与分层窗口分配（layer-wise window assignment）三种技术，我们的模型在处理超过 8192 个 token 的长上下文时，仍能有效保持性能稳定。</p>
+<p><img alt="image-20250918011021015" src="../_images/image-20250918011021015.png" /></p>
+</section>
+</section>
+<section id="alignment">
+<h2>3 ALIGNMENT<a class="headerlink" href="#alignment" title="Link to this heading"></a></h2>
+<p>研究发现，预训练大型语言模型与人类行为<strong>并不对齐</strong>，这使得它们在大多数情况下无法直接作为人工智能助手使用。近期研究表明，采用对齐技术 —— 如<strong>有监督微调（Supervised Finetuning, SFT）<strong>和</strong>人类反馈强化学习（Reinforcement Learning from Human Feedback, RLHF）</strong>—— 可显著提升语言模型进行自然对话的能力。在本章中，我们将深入阐述通义千问（QWEN）模型如何通过 SFT 与 RLHF 技术完成训练，并在对话辅助场景下评估其性能表现。</p>
+<section id="supervised-finetuning">
+<h3>3.1 SUPERVISED FINETUNING<a class="headerlink" href="#supervised-finetuning" title="Link to this heading"></a></h3>
+<p>要让模型理解人类行为，首要步骤是开展有监督微调（SFT）—— 即利用包含 “查询（用户输入）” 与 “响应（对应回复）” 的对话式数据，对预训练大型语言模型（LLM）进行微调。在后续章节中，我们将深入阐述该过程中的数据构建细节与训练方法。</p>
+<section id="id3">
+<h4>3.1.1 DATA<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<p>为提升有监督微调（SFT）数据集的质量与模型适配性，<strong>我们对对话数据进行了多风格标注</strong>。传统数据集（Wei 等人，2022a）虽包含大量以自然语言形式呈现的 “问题、指令与答案” 类数据，但我们在此基础上进一步优化 —— <strong>借鉴 Ouyang 等人（2022）的思路，增加了 “类人类对话” 的标注内容</strong>。这种做法聚焦于为不同任务生成自然流畅的语言，旨在提升模型的 “有用性”（helpfulness）。为确保模型能适配各类场景、避免能力受限，我们特意剔除了采用 “提示词模板（prompt templates）” 格式化的数据（这类数据可能固化模型的响应模式）。此外，为保障模型安全性，我们还针对性标注了与安全相关的数据，涵盖暴力、偏见、色情等风险场景。</p>
+<p><strong>除数据质量外，我们发现训练方法也会对模型最终性能产生显著影响</strong>。为此，我们<strong>采用了 ChatML 格式（OpenAI，2022）</strong>—— 这是一种通用性强的元语言，既能描述对话的元数据（如角色信息），也能呈现单轮对话的具体内容。该格式可帮助模型有效区分不同类型的信息，包括系统设置、用户输入、助手输出等。通过这种方式，我们能进一步提升模型对复杂对话数据的精准处理与分析能力。</p>
+</section>
+<section id="id4">
+<h4>3.1.2 TRAINING<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<p>与预训练阶段保持一致，我们在有监督微调（SFT）中同样采用<strong>下一个 token 预测（next-token prediction）</strong> 作为训练任务，<strong>并对系统输入与用户输入部分施加损失掩码（loss masks）</strong>。具体细节将在 A.1.1 节中展开说明。</p>
+<p>模型训练过程使用 AdamW 优化器，相关超参数设置如下：β₁设为 0.9，β₂设为 0.95，ε 设为 10⁻⁸；序列长度限制为 2048，批次大小（batch size）为 128；模型总计训练 4000 steps，前 1430 steps采用学习率线性升温策略，最终达到 2×10⁻⁶的峰值。为防止模型过拟合，我们采取了三项正则化措施：权重衰减（weight decay）系数设为 0.1， dropout 概率设为 0.1，梯度裁剪（gradient clipping）阈值设为 1.0。</p>
+</section>
+<section id="reinforcement-learning-from-human-feedback">
+<h4>3.2 REINFORCEMENT LEARNING FROM HUMAN FEEDBACK<a class="headerlink" href="#reinforcement-learning-from-human-feedback" title="Link to this heading"></a></h4>
+<p>尽管有监督微调（SFT）已被证实有效，但我们也注意到其<strong>在泛化能力与创造力方面存在局限，且容易出现过拟合问题</strong>。为解决这一问题，我们借鉴 Ouyang 等人（2022）及 Christiano 等人（2017）的方法，引入了<strong>人类反馈强化学习（RLHF）</strong>，以进一步让 SFT 模型与人类偏好对齐。该过程主要包含两大核心步骤：训练奖励模型（Reward Model），以及采用近端策略优化（PPO，Proximal Policy Optimization）算法（Schulman 等人，2017）进行策略训练。</p>
+</section>
+<section id="reward-model">
+<h4>3.2.1 REWARD MODEL<a class="headerlink" href="#reward-model" title="Link to this heading"></a></h4>
+<p>要构建一个性能优良的奖励模型（Reward Model），其流程与构建大型语言模型（LLM）类似，核心在于先进行预训练、再开展微调。这一预训练过程也被称为 <strong>“偏好模型预训练（PMP，Preference Model Pretraining）</strong>”（Bai 等人，2022b），它需要海量的对比数据集作为支撑。该数据集由 “样本对” 构成，每个样本对包含针对同一查询（query）的两个不同回复，以及标注出的 “人类偏好倾向”（即明确哪个回复更符合人类需求）。同理，奖励模型的微调阶段同样基于这类对比数据，但所用数据的质量更高 —— 因为包含了更精细的质量标注信息。</p>
+<p><strong>在微调阶段，我们收集了各类提示词（prompt），并依据人类对通义千问（QWEN）模型回复的反馈来调整奖励模型</strong>。为充分覆盖用户提示词的多样性与复杂性，我们构建了一套包含约 6600 个详细标签的分类体系，并采用了一种 “平衡抽样算法”（参考 Lu 等人，2023）—— 该算法在选取用于标注的提示词时，会同时兼顾 “多样性” 与 “复杂性” 两个维度。为生成丰富多样的回复，我们调用了不同参数规模的 QWEN 模型，并采用了多种采样策略；这种多样化的回复设计，既能降低人工标注的难度，也能提升奖励模型的最终性能。随后，<strong>标注人员会依据标准标注指南对这些回复进行评估打分，并根据分数结果组建 “对比样本对”，用于奖励模型的微调训练。</strong></p>
+<p>在构建奖励模型（Reward Model）时，我们采用了与基础模型参数规模相同的预训练语言模型通义千问（QWEN）作为初始模型。需要说明的是，我们在原始 QWEN 模型中新增了一个<strong>池化层（pooling layer）</strong>—— 该层的作用是基于特定的结束 token（end token），提取单句文本对应的奖励分数。此阶段的训练超参数设置如下：学习率固定为 3×10⁻⁶，批次大小（batch size）为 64，序列长度设为 2048，训练过程仅进行 1 个轮次（epoch）。</p>
+<p>我们将 “测试数据集上的准确率” 作为奖励模型的重要评估指标，但非唯一指标。表 4 中，我们报告了偏好模型预训练（PMP）模型与最终奖励模型在多个人类偏好基准数据集（Bai 等人，2022b；Stiennon 等人，2020；Ethayarajh 等人，2022；Lightman 等人，2023）上的<strong>测试集 pairwise 准确率</strong>（即模型对 “回复对比样本对” 的偏好判断准确率）。需特别说明的是，QWEN Helpful-base 与 QWEN Helpful-online 是我们的专有数据集：其中，QWEN Helpful-base 的回复来自<strong>未经过 RLHF 训练</strong>的 QWEN 模型，而 QWEN Helpful-online 的回复则来自<strong>经过 RLHF 训练</strong>的 QWEN 模型。结果显示，PMP 模型在 “分布外数据”（即未见过的新数据）上展现出较强的泛化能力；而最终的奖励模型在我们自研的 QWEN 奖励数据集（QWEN Helpful-base 与 QWEN Helpful-online）上，性能较 PMP 模型有显著提升。</p>
+<p><img alt="image-20250918011045900" src="../_images/image-20250918011045900.png" /></p>
+</section>
+<section id="reinforcement-learning">
+<h4>3.2.2 REINFORCEMENT LEARNING<a class="headerlink" href="#reinforcement-learning" title="Link to this heading"></a></h4>
+<p>我们的近端策略优化（PPO）流程涉及四个模型：策略模型、价值模型、参考模型和奖励模型。在启动 PPO 程序前，我们会暂停策略模型的更新，仅专注于价值模型的更新，持续训练 50 个步骤。这种做法能确保价值模型有效适配不同的奖励模型。</p>
+<p>在 PPO 训练过程中，我们采用为每个查询同时采样两条回复的策略。基于内部基准测试评估，该策略已被证实更为有效。我们将 KL 散度系数设为 0.04，并基于滑动均值对奖励进行归一化处理。</p>
+<p>策略模型和价值模型的学习率分别为 1×10⁻⁶和 5×10⁻⁶。为提升训练稳定性，我们对价值损失采用裁剪策略，裁剪值设为 0.15。在推理阶段，策略模型的 top-p 参数（核采样参数）设置为 0.9。研究发现，尽管此时的熵值略低于 top-p 设为 1.0 的情况，但奖励值的增长速度更快，最终在相同条件下能稳定获得更高的评估奖励。</p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="index.html" class="btn btn-neutral float-left" title="大模型相关学习文档" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="Qwen2.5_VL_technical_report.html" class="btn btn-neutral float-right" title="Qwen2.5 VL 技术报告" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2025, TJK。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
