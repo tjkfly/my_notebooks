@@ -160,16 +160,17 @@
 <h3>3.1 基准检测器的模型架构<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <p>论文作者所构建的基础 Lift-splat 检测器，仅将 LSS（Philion 和 Fidler，2020）中的分割头替换为 CenterPoint（Yin、Zhou 和 Krahenbuhl，2021）检测头，以实现三维目标检测。具体而言，该检测器包含图 4 所示的四个核心组件：</p>
 <ol class="arabic simple">
-<li><p><strong>图像编码器（Image Encoder）</strong>：采用 ResNet（He 等人2016）等网络，从 N 个视角的输入图像$<span class="math notranslate nohighlight">\(I = \{I_i, i = 1, 2, ..., N\}\)</span><span class="math notranslate nohighlight">\(中提取二维特征\)</span>F_{2d} = {F_{2d}^i \in \mathbb{R}^{C_F \times H \times W}, i = 1, 2, …, N}<span class="math notranslate nohighlight">\(。其中，\)</span><span class="math notranslate nohighlight">\(H 、W 、C_F\)</span>$分别代表特征图的高度、宽度与通道数。</p></li>
-<li><p><strong>深度网络（DepthNet）</strong>：从二维特征$<span class="math notranslate nohighlight">\(F_{2d}\)</span><span class="math notranslate nohighlight">\(中估计图像深度\)</span><span class="math notranslate nohighlight">\(D_{pred} = \{D_{pred}^i \in \mathbb{R}^{C_D \times H \times W}, i = 1, 2, ..., N\}\)</span><span class="math notranslate nohighlight">\(。其中，\)</span><span class="math notranslate nohighlight">\(C_D\)</span>$代表深度区间（depth bins）的数量。</p></li>
-<li><p><strong>视图转换器（View Transformer）</strong>：通过公式（1）将二维特征$<span class="math notranslate nohighlight">\(F_{2d}\)</span><span class="math notranslate nohighlight">\(投影为三维特征\)</span><span class="math notranslate nohighlight">\(F_{3d}\)</span><span class="math notranslate nohighlight">\(，再将这些**三维特征池化**为统一的鸟瞰图（BEV）特征\)</span><span class="math notranslate nohighlight">\(F_{bev}\)</span>$。</p></li>
+<li><p><strong>图像编码器（Image Encoder）</strong>：采用 ResNet（He 等人2016）等网络，从 N 个视角的输入图像<span class="math notranslate nohighlight">\(I = \{I_i, i = 1, 2, ..., N\}\)</span>中提取二维特征<span class="math notranslate nohighlight">\(F_{2d} = \{F_{2d}^i \in \mathbb{R}^{C_F \times H \times W}, i = 1, 2, ..., N\}\)</span>。其中，<span class="math notranslate nohighlight">\(H 、W 、C_F\)</span>分别代表特征图的高度、宽度与通道数。</p></li>
+<li><p><strong>深度网络（DepthNet）</strong>：从二维特征$<span class="math notranslate nohighlight">\(F_{2d}\)</span><span class="math notranslate nohighlight">\(中估计图像深度\)</span>D_{pred} = {D_{pred}^i \in \mathbb{R}^{C_D \times H \times W}, i = 1, 2, …, N}<span class="math notranslate nohighlight">\(。其中，\)</span>C_D$代表深度区间（depth bins）的数量。</p></li>
+<li><p><strong>视图转换器（View Transformer）</strong>：通过公式（1）将二维特征<span class="math notranslate nohighlight">\(F_{2d}\)</span>投影为三维特征<span class="math notranslate nohighlight">\(F_{3d}\)</span>，再将这些<strong>三维特征池化</strong>为统一的鸟瞰图（BEV）特征<span class="math notranslate nohighlight">\(F_{bev}\)</span>。</p></li>
 <li><p><strong>三维检测头（3D Detection Head）</strong>：预测目标的类别、三维边界框偏移量及其他属性。</p></li>
 </ol>
-<p>三维特征的计算如公式（1）所示：
-$<span class="math notranslate nohighlight">\(
+<p>三维特征的计算如公式（1）所示：</p>
+<div class="math notranslate nohighlight">
+\[
 F_{3d}^i = F_{2d}^i \otimes D_{pred}^i, F_{3d}^i \in \mathbb{R}^{C_F \times C_D \times H \times W}
-\)</span><span class="math notranslate nohighlight">\(
-（说明：符号 “\)</span>\otimes$” 代表特征维度扩展后的逐元素相乘，实现二维图像特征与深度信息的融合。）</p>
+\]</div>
+<p>（说明：符号 “<span class="math notranslate nohighlight">\(\otimes\)</span>” 代表特征维度扩展后的逐元素相乘，实现二维图像特征与深度信息的融合。）</p>
 </section>
 <section id="id8">
 <h3>3.2 Lift-splat 架构的 “易实现性”<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
@@ -217,16 +218,18 @@ F_{3d}^i = F_{2d}^i \otimes D_{pred}^i, F_{3d}^i \in \mathbb{R}^{C_F \times C_D 
 <p>BEVDepth 是一种具备可靠深度估计能力的新型多视图三维检测器。为实现这一目标，该检测器采用了两种核心设计：一是在<strong>相机感知深度预测模块（DepthNet）</strong> 上引入显式深度监督；二是针对反投影后的视锥体特征，设计了一种新型<strong>深度优化模块（Depth Refinement Module）</strong>。</p>
 <p><strong>显式深度监督（Explicit Depth Supervision）</strong></p>
 <p>在基准检测器中，深度模块仅通过检测损失获得监督信号。但由于单目深度估计本身难度较高，仅依靠检测损失远不足以对深度模块进行有效监督。因此，论文作者提出利用点云数据P生成的真实深度<span class="math notranslate nohighlight">\(D_{gt}\)</span>，对中间深度预测结果<span class="math notranslate nohighlight">\(D_{pred}\)</span>进行监督。</p>
-<p>设<span class="math notranslate nohighlight">\(R_i \in \mathbb{R}^{3×3}\)</span>和<span class="math notranslate nohighlight">\(t_i \in \mathbb{R}^3\)</span>分别为第<span class="math notranslate nohighlight">\(i\)</span>个视角下 “<strong>激光雷达坐标系到相机坐标系</strong>” 的<strong>旋转矩阵</strong>与<strong>平移矩阵</strong>，<span class="math notranslate nohighlight">\(K_i \in \mathbb{R}^{3×3}\)</span> 为第<span class="math notranslate nohighlight">\(i\)</span>个相机的<strong>内参矩阵</strong>。为获取真实深度<span class="math notranslate nohighlight">\(D_{gt}\)</span>，首先通过公式（2）进行计算：
-$<span class="math notranslate nohighlight">\(
+<p>设<span class="math notranslate nohighlight">\(R_i \in \mathbb{R}^{3×3}\)</span>和<span class="math notranslate nohighlight">\(t_i \in \mathbb{R}^3\)</span>分别为第<span class="math notranslate nohighlight">\(i\)</span>个视角下 “<strong>激光雷达坐标系到相机坐标系</strong>” 的<strong>旋转矩阵</strong>与<strong>平移矩阵</strong>，<span class="math notranslate nohighlight">\(K_i \in \mathbb{R}^{3×3}\)</span> 为第<span class="math notranslate nohighlight">\(i\)</span>个相机的<strong>内参矩阵</strong>。为获取真实深度<span class="math notranslate nohighlight">\(D_{gt}\)</span>，首先通过公式（2）进行计算：</p>
+<div class="math notranslate nohighlight">
+\[
 P_i^{img}(u_d, v_d, d) = K_i(R_iP + t_i)
-\)</span><span class="math notranslate nohighlight">\(
-该式计算结果可进一步转换为 \)</span>2.5D<span class="math notranslate nohighlight">\( 图像坐标\)</span>P_i^{img}(u, v, d)<span class="math notranslate nohighlight">\(，其中\)</span>u<span class="math notranslate nohighlight">\(和\)</span>v<span class="math notranslate nohighlight">\(代表像素坐标系下的坐标。若某点云的 \)</span>2.5D<span class="math notranslate nohighlight">\( 投影结果不在第\)</span>i<span class="math notranslate nohighlight">\(个视角的图像范围内，则直接丢弃该点云（投影结果示例见图 4）。
-随后，为使 “投影后点云” 与 “预测深度” 的维度形状保持一致，需对\)</span>P_i^{img}<span class="math notranslate nohighlight">\(依次执行**最小池化（min pooling）与独热编码（one-hot）操作**。论文作者将这两个操作统一记为函数\)</span>\phi<span class="math notranslate nohighlight">\(，最终生成的真实深度\)</span>D_{gt}<span class="math notranslate nohighlight">\(如公式（3）所示：
-至于深度损失\(L_{depth}\)，论文作者采用了简单的二元交叉熵（Binary Cross Entropy）进行计算。
-\)</span><span class="math notranslate nohighlight">\(
+\]</div>
+<p>该式计算结果可进一步转换为 <span class="math notranslate nohighlight">\(2.5D\)</span> 图像坐标 <span class="math notranslate nohighlight">\(P_i^{img}(u, v, d)\)</span>，其中<span class="math notranslate nohighlight">\(u\)</span>和<span class="math notranslate nohighlight">\(v\)</span>代表像素坐标系下的坐标。若某点云的 <span class="math notranslate nohighlight">\(2.5D\)</span> 投影结果不在第<span class="math notranslate nohighlight">\(i\)</span>个视角的图像范围内，则直接丢弃该点云（投影结果示例见图 4）。
+随后，为使 “投影后点云” 与 “预测深度” 的维度形状保持一致，需对<span class="math notranslate nohighlight">\(P_i^{img}\)</span>依次执行<strong>最小池化（min pooling）与独热编码（one-hot）操作</strong>。论文作者将这两个操作统一记为函数<span class="math notranslate nohighlight">\(\phi\)</span>，最终生成的真实深度<span class="math notranslate nohighlight">\(D_{gt}\)</span>如公式（3）所示：
+至于深度损失(L_{depth})，论文作者采用了简单的二元交叉熵（Binary Cross Entropy）进行计算。</p>
+<div class="math notranslate nohighlight">
+\[
 D_{gt}^i = \phi(P_{img}^i)
-\)</span>$</p>
+\]</div>
 <p><strong>相机感知深度预测（Camera-aware Depth Prediction）</strong></p>
 <p>根据经典相机模型，深度估计与相机内参密切相关，这意味着将相机内参融入深度网络（DepthNet）的建模过程具有一定难度。在多视图三维数据集中（如 nuScenes 数据集），不同相机可能具有不同的视场角（FOV），因此将相机内参纳入建模尤为重要。</p>
 <p>为此，<strong>论文作者提出将相机内参作为深度网络（DepthNet）的输入之一</strong>，具体实现步骤如下：</p>
@@ -235,11 +238,12 @@ D_{gt}^i = \phi(P_{img}^i)
 <li><p><strong>图像特征重加权</strong>：利用Squeeze-and-Excitation，SE 模块（Hu、Shen 和 Sun，2018），用处理后的相机内参对图像特征<span class="math notranslate nohighlight">\(F_{2d}^i\)</span>进行重加权，使网络更关注与深度估计相关的特征区域。</p></li>
 <li><p><strong>融合相机外参</strong>：将相机外参与处理后的内参拼接（concatenate），帮助深度网络感知图像特征<span class="math notranslate nohighlight">\(F_{2d}\)</span>在自车坐标系（ego coordinate system）中的空间位置。</p></li>
 </ol>
-<p>设<span class="math notranslate nohighlight">\(\psi\)</span>代表原始深度网络（DepthNet），则整体相机感知深度预测的计算如公式（4）所示：
-$<span class="math notranslate nohighlight">\(
+<p>设<span class="math notranslate nohighlight">\(\psi\)</span>代表原始深度网络（DepthNet），则整体相机感知深度预测的计算如公式（4）所示：</p>
+<div class="math notranslate nohighlight">
+\[
 D_{pred}^i = \psi\left( SE\left( F_{2d}^i \mid \text{MLP}\left( \xi(R_i) \oplus \xi(t_i) \oplus \xi(K_i) \right) \right) \right)
-\)</span><span class="math notranslate nohighlight">\(
-其中，\)</span>\xi<span class="math notranslate nohighlight">\(代表展平（Flatten）操作，用于将矩阵形式的相机参数（旋转矩阵\)</span>R_i<span class="math notranslate nohighlight">\(、平移矩阵\)</span>t_i<span class="math notranslate nohighlight">\(、内参矩阵\)</span>K_i<span class="math notranslate nohighlight">\(）转换为向量形式；符号 “\)</span>\oplus<span class="math notranslate nohighlight">\(” 代表向量拼接操作；“\)</span>SE(\cdot \mid \cdot)<span class="math notranslate nohighlight">\(” 表示用 “\)</span>\mid<span class="math notranslate nohighlight">\(” 右侧的相机参数（经 MLP 处理后）指导 SE 模块对左侧图像特征\)</span>F_{2d}^i$进行重加权。</p>
+\]</div>
+<p>其中，<span class="math notranslate nohighlight">\(\xi\)</span>代表展平（Flatten）操作，用于将矩阵形式的相机参数（旋转矩阵<span class="math notranslate nohighlight">\(R_i\)</span>、平移矩阵<span class="math notranslate nohighlight">\(t_i\)</span>、内参矩阵<span class="math notranslate nohighlight">\(K_i\)</span>）转换为向量形式；符号 “<span class="math notranslate nohighlight">\(\oplus\)</span>” 代表向量拼接操作；“<span class="math notranslate nohighlight">\(SE(\cdot \mid \cdot)\)</span>” 表示用 “<span class="math notranslate nohighlight">\(\mid\)</span>” 右侧的相机参数（经 MLP 处理后）指导 SE 模块对左侧图像特征<span class="math notranslate nohighlight">\(F_{2d}^i\)</span>进行重加权。</p>
 <p>论文作者还指出，已有研究（Park 等人，2021b）同样利用了相机感知能力，但该研究是根据相机内参对回归目标（深度值）进行缩放，导致其方法难以适配相机设置复杂的自动驾驶系统。与之不同，论文作者提出的方法将相机参数直接建模到深度网络内部，目标是提升中间深度预测结果的质量。</p>
 <p>得益于 LSS 架构（Philion 和 Fidler，2020）的解耦特性，相机感知深度预测模块与检测头相互独立，因此无需修改回归目标（如深度区间划分、检测框参数等），最终使模型具备更强的可扩展性。</p>
 <p><strong>深度优化模块（Depth Refinement Module）</strong></p>
