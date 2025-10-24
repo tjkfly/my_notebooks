@@ -4,6 +4,7 @@
 ## 章节导航
 - [BEV-L1：Bevformer 详解](Bevformer.md)
 - [BEV-L2：BevDepth 详解](BEVDepth.md)
+- [卡尔曼滤波](kalman.md)
 
 <!-- 隐藏式toctree，仅用于Sphinx索引，不影响页面显示 -->
 
@@ -13,4 +14,6 @@
 
 Bevformer.md
 BEVDepth.md
+kalman.md
 ```
+

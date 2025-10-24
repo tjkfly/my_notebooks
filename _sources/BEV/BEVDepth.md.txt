@@ -173,7 +173,7 @@ $$
 
 设$\psi$代表原始深度网络（DepthNet），则整体相机感知深度预测的计算如公式（4）所示：
 
- 
+
 $$
 D_{pred}^i = \psi\left( SE\left( F_{2d}^i \mid \text{MLP}\left( \xi(R_i) \oplus \xi(t_i) \oplus \xi(K_i) \right) \right) \right)
 $$
