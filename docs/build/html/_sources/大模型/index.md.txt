@@ -4,12 +4,19 @@
 ## 章节导航
 - [大模型-第1章：Qwen 技术报告](Qwen_technical_report.md)
 - [大模型-第2章：Qwen2.5-VL 技术报告](Qwen2.5_VL_technical_report.md)
+- [大模型-TensorRT-LLM ](TensorRT-LLM.md)
+- [大模型-RoPE ](RoPE.md)
+- [大模型-LLaMA ](LLaMA.md)
 
 <!-- 加入 toctree，确保 Sphinx 识别子章节（消除警告） -->
+
 ```{toctree}
 :maxdepth: 1
 :hidden:
 
 Qwen_technical_report.md
 Qwen2.5_VL_technical_report.md
+TensorRT-LLM.md
+RoPE.md
+LLaMA.md
 ```
