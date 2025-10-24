@@ -78,9 +78,13 @@
 4. **三维检测头（3D Detection Head）**：预测目标的类别、三维边界框偏移量及其他属性。
 
 三维特征的计算如公式（1）所示：
+
+
 $$
 F_{3d}^i = F_{2d}^i \otimes D_{pred}^i, F_{3d}^i \in \mathbb{R}^{C_F \times C_D \times H \times W}
 $$
+
+
 （说明：符号 “$\otimes$” 代表特征维度扩展后的逐元素相乘，实现二维图像特征与深度信息的融合。）
 
 ### 3.2 Lift-splat 架构的 “易实现性”

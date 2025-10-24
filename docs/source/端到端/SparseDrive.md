@@ -75,7 +75,6 @@ SparseDrive 的整体框架如图 2 所示。具体而言，SparseDrive 由三�
 如图 3 所示，稀疏感知模块的模型结构具有结构对称性，该模块将检测、跟踪与在线建图任务统一整合在一起。
 
 **稀疏检测（Sparse Detection）** 周边智能体通过一组实例特征 $F_d \in \mathbb{R}^{N_d \times C}$ 与锚框 $B_d \in \mathbb{R}^{N_d \times 11}$表示，其中 $N_d$ 为锚框数量，$C$ 为特征通道维度。每个锚框包含位置、尺寸、偏航角与速度信息，具体格式定义为：
-
 $$
 \{x, y, z, ln w, ln h, ln l,sin yaw, cos yaw, vx, vy, vz\}
 $$
