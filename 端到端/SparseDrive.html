@@ -155,21 +155,19 @@
 <section id="symmetric-sparse-perception">
 <h3>3.2 Symmetric Sparse Perception<a class="headerlink" href="#symmetric-sparse-perception" title="Link to this heading"></a></h3>
 <p>如图 3 所示，稀疏感知模块的模型结构具有结构对称性，该模块将检测、跟踪与在线建图任务统一整合在一起。</p>
-<p><strong>稀疏检测（Sparse Detection）</strong> 周边智能体通过一组实例特征 <span class="math notranslate nohighlight">\(F_d \in \mathbb{R}^{N_d \times C}\)</span> 与锚框 <span class="math notranslate nohighlight">\(B_d \in \mathbb{R}^{N_d \times 11}\)</span>表示，其中 <span class="math notranslate nohighlight">\(N_d\)</span> 为锚框数量，<span class="math notranslate nohighlight">\(C\)</span> 为特征通道维度。每个锚框包含位置、尺寸、偏航角与速度信息，具体格式定义为：</p>
-<div class="math notranslate nohighlight">
-\[
+<p><strong>稀疏检测（Sparse Detection）</strong> 周边智能体通过一组实例特征 <span class="math notranslate nohighlight">\(F_d \in \mathbb{R}^{N_d \times C}\)</span> 与锚框 <span class="math notranslate nohighlight">\(B_d \in \mathbb{R}^{N_d \times 11}\)</span>表示，其中 <span class="math notranslate nohighlight">\(N_d\)</span> 为锚框数量，<span class="math notranslate nohighlight">\(C\)</span> 为特征通道维度。每个锚框包含位置、尺寸、偏航角与速度信息，具体格式定义为：
+$<span class="math notranslate nohighlight">\(
 \{x, y, z, ln w, ln h, ln l,sin yaw, cos yaw, vx, vy, vz\}
-\]</div>
+\)</span>$</p>
 <p><strong>稀疏检测分支</strong>包含 <span class="math notranslate nohighlight">\(N_{\text{dec}}\)</span> 个解码器，其中包括 1 个非时序解码器和 <span class="math notranslate nohighlight">\(N_{\text{dec}} - 1\)</span> 个时序解码器。每个解码器均以特征图 <span class="math notranslate nohighlight">\(I\)</span>、实例特征 <span class="math notranslate nohighlight">\(F_d\)</span> 和锚框 <span class="math notranslate nohighlight">\(B_d\)</span> 作为输入，输出更新后的实例特征与优化后的锚框。非时序解码器以随机初始化的实例为输入，而时序解码器的输入则同时来自当前帧与历史帧。</p>
 <p>具体而言，<strong>非时序解码器由三个子模块构成</strong>：<strong>可变形聚合</strong>（deformable aggregation）、<strong>前馈网络（FFN）<strong>以及</strong>用于锚框优化与类别分类的输出层</strong>。可变形聚合模块会围绕锚框 <span class="math notranslate nohighlight">\(B_d\)</span> 生成固定或可学习的关键点，并将这些关键点投影到特征图 <span class="math notranslate nohighlight">\(I\)</span> 上进行特征采样。实例特征 <span class="math notranslate nohighlight">\(F_d\)</span>会与采样得到的特征相加以完成更新，最终在输出层负责预测目标的分类分数与锚框的偏移量。</p>
 <p><strong>时序解码器</strong>在非时序解码器的基础上，额外<strong>增加了两个多头注意力层</strong>：一个是 “历史帧时序实例与当前帧实例之间的时序交叉注意力层”，另一个是 “当前帧实例间的自注意力层”。在多头注意力层中，锚框会被转换为高维锚框嵌入向量 <span class="math notranslate nohighlight">\(E_d \in \mathbb{R}^{N_d \times C}\)</span>，并作为位置编码<code class="docutils literal notranslate"><span class="pre">（positional</span> <span class="pre">encoding）</span></code>使用。</p>
 <p><img alt="image-20250922210357198" src="../_images/image-20250922210357198.png" /></p>
 <p><code class="docutils literal notranslate"><span class="pre">图</span> <span class="pre">3：对称稀疏感知的模型架</span> <span class="pre">构该架构采用对称结构，将检测、跟踪与在线建图任务统一整合。</span></code></p>
-<p>**稀疏在线建图（Sparse Online Mapping）**在线建图分支与检测分支采用相同的模型结构，仅在实例定义上存在差异。对于静态地图元素，其锚框被定义为包含 <span class="math notranslate nohighlight">\(N_p\)</span> 个点的折线（<code class="docutils literal notranslate"><span class="pre">polyline</span></code>），具体形式为：</p>
-<div class="math notranslate nohighlight">
-\[
+<p>**稀疏在线建图（Sparse Online Mapping）**在线建图分支与检测分支采用相同的模型结构，仅在实例定义上存在差异。对于静态地图元素，其锚框被定义为包含 <span class="math notranslate nohighlight">\(N_p\)</span> 个点的折线（<code class="docutils literal notranslate"><span class="pre">polyline</span></code>），具体形式为：
+$<span class="math notranslate nohighlight">\(
 \left\{ x_0, y_0, x_1, y_1, \dots, x_{N_p-1}, y_{N_p-1} \right\}
-\]</div>
+\)</span>$</p>
 <p>如此一来，所有地图元素均可通过地图实例特征 <span class="math notranslate nohighlight">\(F_m \in \mathbb{R}^{N_m \times C}\)</span>  与锚框折线 <span class="math notranslate nohighlight">\(L_m \in \mathbb{R}^{N_m \times N_p \times 2}\)</span>表示，其中 <span class="math notranslate nohighlight">\(N_m\)</span>为锚框折线的数量。</p>
 <p>**稀疏跟踪（Sparse Tracking）**在跟踪任务上，沿用 Sparse4Dv3 [33] 的身份（ID）分配流程：当某个实例的检测置信度超过阈值 <span class="math notranslate nohighlight">\(T_{\text{thresh}}\)</span> 时，该实例会被锁定为特定目标并分配一个身份标识（ID），此 ID 在整个时间传播过程中保持不变。该跟踪策略无需任何跟踪约束，最终为稀疏感知模块带来简洁、优雅的对称设计。</p>
 </section>
